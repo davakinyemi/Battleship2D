@@ -8,8 +8,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Battleship2D";
-		config.width = 960;
-		config.height = 720;
+		config.width = 750;
+		config.height = 600;
 		new LwjglApplication(new BattleshipGame(), config);
 	}
 }

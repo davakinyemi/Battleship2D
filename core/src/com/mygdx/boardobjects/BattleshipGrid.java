@@ -1,14 +1,22 @@
 package com.mygdx.boardobjects;
 
+import com.mygdx.gameboard.GameBoard;
+
+import java.util.ArrayList;
+
+import static java.lang.System.out;
+
 /**
  * Created by jorgegil on 8/4/15.
  */
 public class BattleshipGrid {
 
-    public String water_symbol = "~";
-    public String ship_body_symbol = "0";
-    public String miss_symbol = "X";
-    public String hit_symbol = "*";
+    private String water_symbol = "~";
+    private String ship_body_symbol = "0";
+    private String miss_symbol = "X";
+    private String hit_symbol = "*";
+
+    private String name;
 
     public String[] alphabets = {"A", "B", "C", "D", "E",
             "F", "G", "H", "I", "J", "K", "L", "M", "N",
@@ -17,8 +25,8 @@ public class BattleshipGrid {
 
     private String[][] grid;
 
-    public BattleshipGrid(int size){
-
+    public BattleshipGrid(int size, String name){
+        this.name = name;
         grid = new String[size][size];
 
         // fills board with letters, numbers, and "water"
@@ -41,50 +49,62 @@ public class BattleshipGrid {
         return grid;
     }
 
-    // prints board
+    // prints the current state of the grid
     public void print_grid(){
-
+        out.println("-----------------------------------" + name + "-----------------------------------");
         for (String[] grid1 : grid) {
             for (int x = 0; x < grid.length; x++) {
-                System.out.print(grid1[x]);
-                System.out.print("   ");
+                out.print(grid1[x]);
+                out.print("   ");
             }
-            System.out.println();
-            System.out.println();
+            out.println();
+            out.println();
         }
+        out.println("----------------------------------------------------------------------------------");
     }
 
-    // puts a * or X in the board where a hit or miss occurred
-    public void reset_grid_hit(int alphabet, int number, int hit){
-
-        if(hit == 1){
-            if(grid[alphabet][number].equals(ship_body_symbol)){
-                grid[alphabet][number] = hit_symbol;
-            } else {
-                grid[alphabet][number] = ship_body_symbol;
-            }
-        }else if(hit == 0){
-            grid[alphabet][number] = miss_symbol;
-        }else{
-            throw new IllegalArgumentException("Hit must be 1 or 0");
-        }
+    // returns the string value (symbol) at the position in array
+    public String get_symbol(int x, int y){
+        return grid[y][x];
     }
 
-    public char getSymbol(int x, int y) {
-        return grid[y][x].charAt(0);
-    }
-
-    public void setSymbol(int x, int y, String symbol) {
+    // updates the string value at position in array
+    public void set_symbol(int x, int y, String symbol){
         grid[y][x] = symbol;
     }
 
-    public void addShip(int x, int y, int width, int height, int shipSize) {
-        for (int i = 0; i < shipSize; i++) {
-            grid[y][x] = "0";
-            if (width == 1) {
+    // adds ship to grid
+    public void add_ship(int x, int y, int width, int height, int ship_Size, String type, String name){
+        String Y, X;
+
+        for(int i = 0; i < ship_Size; i++){
+            Y = GameBoard.get_Player_grid().get_symbol(0, y);
+            X = GameBoard.get_Player_grid().get_symbol(x, 0);
+
+            grid[y][x] = ship_body_symbol;
+            //
+            switch (type) {
+                case "player":
+                    add_coords(X, Y, name, GameBoard.get_player_ships());
+                    break;
+                case "ai":
+                    add_coords(X, Y, name, GameBoard.get_AI_ships());
+                    break;
+            }
+            //
+            if(width == 1){
                 y++;
-            } else {
+            } else if(width > 1){
                 x++;
+            }
+        }
+    }
+
+    // used by add_ship() to add the ships coordinates to their respective arraylist
+    public void add_coords(String x, String y, String name, ArrayList<Battleship> ship){
+        for(Battleship s : ship){
+            if(s.get_name().equals(name)){
+                s.set_coords(y + x);
             }
         }
     }

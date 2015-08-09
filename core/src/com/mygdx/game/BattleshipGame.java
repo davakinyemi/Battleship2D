@@ -13,8 +13,8 @@ public class BattleshipGame extends Game {
 	
 	@Override
 	public void create () {
-		AssetLoader.load();
-		setScreen(new GameScreen());
+		AssetLoader.load(); // Load Textures and other assets
+		setScreen(new GameScreen()); // Initialize GameScreen
 	}
 
 }

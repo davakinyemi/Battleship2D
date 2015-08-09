@@ -22,7 +22,7 @@ public class GameRenderer {
     public GameRenderer(GameBoard board) {
         myBoard = board;
         cam = new OrthographicCamera();
-        cam.setToOrtho(true, 240, 180);
+        cam.setToOrtho(true, 200, 160);
 
         batch = new SpriteBatch();
         batch.setProjectionMatrix(cam.combined);
